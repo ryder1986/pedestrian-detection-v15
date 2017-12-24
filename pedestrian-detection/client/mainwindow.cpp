@@ -3,11 +3,16 @@
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
 {
-    Ui::Form *f=new Ui::Form;
-    f->setupUi(this);
+    window=new Ui::Form;
+    window->setupUi(this);
 }
 
 MainWindow::~MainWindow()
+{
+
+}
+
+void MainWindow::on_pushButton_search_clicked()
 {
 
 }
