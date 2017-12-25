@@ -79,7 +79,8 @@ private:
                         this_thread::sleep_for(chrono::milliseconds(data->frame_wait_time));
                 }
             }else{
-                prt(info,"create video cap");
+                prt(info,"create video cap 1 sec later");
+                this_thread::sleep_for(chrono::seconds(1));
                 data->p_cap=cvCreateFileCapture(data->url.data());  //create video source
                 data->width=cvGetCaptureProperty(data->p_cap,CV_CAP_PROP_FRAME_WIDTH);
                 data->height=cvGetCaptureProperty(data->p_cap,CV_CAP_PROP_FRAME_HEIGHT);

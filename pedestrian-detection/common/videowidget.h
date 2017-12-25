@@ -43,7 +43,7 @@ protected:
             paint_layout1(painter);
             paint_layout2(painter);
         }else{
-            prt(info,"invalid frame");
+            //prt(info,"invalid frame");
         }
     }
     void  initializeGL()

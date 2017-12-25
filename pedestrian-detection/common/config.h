@@ -133,7 +133,15 @@ public:
         cfg.camera.removeAt(index-1);
         save();
     }
-
+    void append_camera(QString url)
+    {
+        cfg.camera_amount++;
+        camera_config_t tmp;
+        tmp.ip=url;
+        tmp.port=1234;
+        cfg.camera.append(tmp);
+        save();
+    }
     //    camera_config_t get_camera_config(int index)
     //    {
     //        if(index>0&&index<=cfg.camera_amount)

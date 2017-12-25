@@ -114,10 +114,6 @@ public:
     }
 
 public slots:
-    void test()
-    {
-        //   prt(info,"11111");
-    }
     void socket_error()
     {
         emit socket_error(this);
@@ -277,13 +273,11 @@ public slots:
     {
         QTcpSocket *skt = server->nextPendingConnection();
         connect(skt, SIGNAL(disconnected()),skt, SLOT(deleteLater()));
-        QString str(skt->peerAddress().toIPv4Address()>>28);
-        prt(info,"client %s:%d",str.toStdString().data(),skt->peerPort());
+        QString str(skt->peerAddress().toString());
+        prt(info,"client ip %s, port %d connected",str.toStdString().data(),skt->peerPort());
         ClientSession *client=new ClientSession(skt,this->cam_manager);
         connect(client,SIGNAL(socket_error(ClientSession*)),this,SLOT(delete_client(ClientSession*)));
         clients.append(client);
-        //        connect(client,SIGNAL(get_server_config(char *)),cam_manager,SLOT(get_config(char *)));
-        //        connect(cam_manager,SIGNAL(output_2_client(QByteArray)),this,SLOT(output_2_client(QByteArray)));
     }
     void delete_client(ClientSession *c)
     {

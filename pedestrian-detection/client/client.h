@@ -32,8 +32,31 @@ public:
     void search_device()
     {
         broadcast_info();
-        //  search();
     }
+    QString wait_server_info_reply(int timeout_seconds)
+    {
+        int tick=0;
+        QString str;
+        str.clear();
+        int sleep_time=10;
+        while(!udp_skt_find_server->hasPendingDatagrams())
+        {
+            QThread::msleep(sleep_time);
+            if(tick++>timeout_seconds*1000/sleep_time){
+                return str;
+            }
+        }
+        //    if(udp_skt->hasPendingDatagrams())
+        {
+            datagram.resize((udp_skt_find_server->pendingDatagramSize()));
+            udp_skt_find_server->readDatagram(datagram.data(),datagram.size());
+            prt(info,"get server info : %s",datagram.data());
+            server_ip.clear();
+            server_ip.append(datagram.split(',')[0]);
+        }
+        return server_ip;
+    }
+
 public slots:
     void get_reply()
     {
@@ -150,36 +173,12 @@ public:
 signals:
     // void send_camera_rst(int index, QByteArray ba);
 public slots:
-    //  QString wait_server_info_reply(int timeout_seconds)
-    //    {
-    //        int tick=0;
-    //        QString str;
-    //        int sleep_time=10;
-    //        while(!udp_skt_find_server->hasPendingDatagrams())
-    //        {
-    //            QThread::msleep(sleep_time);
-    //            if(tick++>timeout_seconds*1000/sleep_time){
-    //                return str;
-    //            }
-    //        }
-    //        //    if(udp_skt->hasPendingDatagrams())
-    //        {
-    //            datagram.resize((udp_skt_find_server->pendingDatagramSize()));
-    //            udp_skt_find_server->readDatagram(datagram.data(),datagram.size());
-    //            prt(info,"get server info : %s",datagram.data());
-    //            server_ip.clear();
-    //            server_ip.append(datagram.split(',')[0]);
-    //        }
-    //        return server_ip;
-    //    }
-    //     void connect_to_server()
-    //    {
-    //        prt(info,"trying to connect %s",server_ip.data());
-    //        qDebug()<<server_ip;
-    //        tcp_socket->connectToHost(server_ip,Protocol::SERVER_PORT);
-    //    }
-
-
+    void connect_to_server(QString ip)
+    {
+        server_ip=ip;
+        tcp_socket->connectToHost(server_ip,Protocol::SERVER_PORT);
+        prt(info,"connecting to %s",server_ip.toStdString().data());
+    }
     void  displayError(QAbstractSocket::SocketError socketError)
     {
         switch (socketError) {
@@ -194,8 +193,6 @@ public slots:
         default:
             qDebug()<<"1";
         }
-
-        //  getFortuneButton->setEnabled(true);
     }
 
 private:

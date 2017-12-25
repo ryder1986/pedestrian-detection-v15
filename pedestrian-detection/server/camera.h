@@ -13,7 +13,11 @@ class Camera
 public:
     Camera(camera_config cfg)
     {
-        p_src=new VideoSrc("test1.264");
+        p_src=new VideoSrc(cfg.ip.toStdString().data());
+    }
+    ~Camera()
+    {
+        delete p_src;
     }
 };
 
